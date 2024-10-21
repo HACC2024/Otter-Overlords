@@ -4,6 +4,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/component
 import Sidebar from "./Sidebar";
 import { useEffect, useReducer } from "react";
 import { data } from "@/utils/data";
+import Visualizer from "./Visualizer";
 
 export interface SelectOption {
     label: string;
@@ -69,7 +70,7 @@ const App = () => {
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={80}>
                     <div className="flex h-full items-center justify-center p-6">
-                        <span className="font-semibold">Content</span>
+                        <Visualizer />
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
