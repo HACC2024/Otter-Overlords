@@ -16,15 +16,15 @@ export default function Home() {
         <div className={styles.page}>
             {/* Dropdown to select between Table, ScatterGraph, and PieChart */}
             <div className={styles.selectContainer}>
-                <label htmlFor="componentSelect">Choose Component: </label>
+                <label htmlFor="componentSelect">Visual: </label>
                 <select
                     id="componentSelect"
                     value={selectedComponent}
                     onChange={handleComponentChange}
                 >
                     <option value="table">Table</option> {/* Option for Table */}
-                    <option value="scattergraph">ScatterGraph</option> {/* Option for ScatterGraph */}
-                    <option value="piechart">PieChart</option> {/* Option for PieChart */}
+                    <option value="scattergraph">Scatter Graph</option> {/* Option for ScatterGraph */}
+                    <option value="piechart">Pie Chart</option> {/* Option for PieChart */}
                 </select>
             </div>
 

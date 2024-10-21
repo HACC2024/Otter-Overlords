@@ -11,11 +11,11 @@
 }
 
 .selectContainer {
-    margin-bottom: 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-bottom: 20px;
+    width: 100%; /* Full width so it can be centered relative to the page */
 }
 
 .selectContainer label {
@@ -38,17 +38,4 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-}
-
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .selectContainer label {
-        color: #ccc;
-    }
-
-    .selectContainer select {
-        background-color: #333;
-        color: #ccc;
-        border: 1px solid #555;
-    }
 }
