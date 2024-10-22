@@ -70,9 +70,7 @@ const App = () => {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={80}>
-                    <div className="flex h-full items-center justify-center p-6">
-                        <DatasetTable organization={state.organization} groups={state.groups} tags={state.tags} />
-                    </div>
+                    <DatasetTable organization={state.organization} groups={state.groups} tags={state.tags} />
                 </ResizablePanel>
             </ResizablePanelGroup>
         </div>
