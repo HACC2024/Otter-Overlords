@@ -4,87 +4,68 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { data } from "@/utils/data";
-import { Dispatch, FC, useEffect, useState } from "react";
+import { Dispatch, FC } from "react";
 import { ScrollArea } from "./ui/scroll-area";
-import { State } from "./App";
 
-interface OptionItem {
-    value: string;
+interface MultiSelectComboboxProps {
     label: string;
-}
-
-interface Options {
-    tagOptions: OptionItem[];
-}
-
-interface ComboboxProps {
-    state: State;
+    selectedItems: string[];
+    items: { label: string; value: string }[];
     dispatch: Dispatch<{ type: string; payload: unknown }>;
+    stateKey: string; // Either 'groups', 'tags', or another key for selected items
 }
 
-const TagMultiSelectCombobox: FC<ComboboxProps> = ({ state, dispatch }) => {
-    const [options, setOptions] = useState<Options>({
-        tagOptions: [],
-    });
-
-    useEffect(() => {
-        const axiosHandler = async () => {
-            const TAGS = await data.getTagOptions();
-            setOptions({
-                tagOptions: TAGS,
-            });
-        };
-        axiosHandler();
-    }, []);
-
+const MultiSelectCombobox: FC<MultiSelectComboboxProps> = ({
+    label,
+    selectedItems,
+    items,
+    dispatch,
+    stateKey,
+}) => {
     const handleSelect = (currentValue: string) => {
-        const isSelected = state.tags.includes(currentValue);
+        const isSelected = selectedItems.includes(currentValue);
         let newSelected;
         if (isSelected) {
-            newSelected = state.tags.filter((value: string) => value !== currentValue);
+            newSelected = selectedItems.filter((value: string) => value !== currentValue);
         } else {
-            newSelected = [...state.tags, currentValue];
+            newSelected = [...selectedItems, currentValue];
         }
-        dispatch({ type: "tags", payload: newSelected });
+        dispatch({ type: stateKey, payload: newSelected });
     };
 
-    const handleRemoveTag = (value: string) => {
-        const newSelected = state.tags.filter((tag: string) => tag !== value);
-        dispatch({ type: "tags", payload: newSelected });
+    const handleRemoveItem = (value: string) => {
+        const newSelected = selectedItems.filter((item: string) => item !== value);
+        dispatch({ type: stateKey, payload: newSelected });
     };
 
     const handleClearAll = () => {
-        dispatch({ type: "tags", payload: [] });
+        dispatch({ type: stateKey, payload: [] });
     };
 
     return (
         <>
-            <p className="text-sm font-bold text-gray-800 mt-3 mb-1 ml-1">
-                Tags
-            </p>
+            <p className="text-sm font-bold text-gray-800 mt-3 mb-1 ml-1">{label}</p>
 
-            {/* Dropdown to select tags */}
+            {/* Dropdown to select items */}
             <Popover>
                 <PopoverTrigger asChild>
                     <Button
-                        id="tag-select"
                         variant="outline"
                         role="combobox"
                         className="w-60 justify-between border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 truncate"
-                        disabled={options.tagOptions.length === 0}
+                        disabled={items.length === 0}
                     >
-                        <span>{state.tags.length > 0 ? "Edit tags..." : "Select tags..."}</span>
+                        <span>{selectedItems.length > 0 ? `Edit ${label.toLowerCase()}...` : `Select ${label.toLowerCase()}...`}</span>
                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-60 p-0 border border-gray-300 rounded-md shadow-lg">
                     <Command>
-                        <CommandInput placeholder="Search tags..." className="h-8 px-3 my-2 border-b border-gray-300" />
+                        <CommandInput placeholder={`Search ${label.toLowerCase()}...`} className="h-8 px-3 my-2 border-b border-gray-300" />
                         <CommandList>
-                            <CommandEmpty>No tags found. Please try a different keyword.</CommandEmpty>
+                            <CommandEmpty>No {label.toLowerCase()} found. Please try a different keyword.</CommandEmpty>
                             <CommandGroup>
-                                {options.tagOptions.map((option) => (
+                                {items.map((option) => (
                                     <CommandItem
                                         key={option.value}
                                         value={option.value}
@@ -93,10 +74,7 @@ const TagMultiSelectCombobox: FC<ComboboxProps> = ({ state, dispatch }) => {
                                     >
                                         {option.label}
                                         <CheckIcon
-                                            className={cn(
-                                                "ml-auto h-4 w-4",
-                                                state.tags.includes(option.value) ? "opacity-100" : "opacity-0"
-                                            )}
+                                            className={cn("ml-auto h-4 w-4", selectedItems.includes(option.value) ? "opacity-100" : "opacity-0")}
                                         />
                                     </CommandItem>
                                 ))}
@@ -105,23 +83,19 @@ const TagMultiSelectCombobox: FC<ComboboxProps> = ({ state, dispatch }) => {
                     </Command>
                 </PopoverContent>
             </Popover>
-            <p className="text-xs text-gray-600 mt-1 ml-1">
-                Filter datasets by selecting tags.
-            </p>
-            {
-                state.tags.length > 0 && (
-                    <p className="text-xs text-blue-500 mb-1 ml-1">
-                        <a href="#" onClick={handleClearAll}>Clear filters</a>
-                    </p>
-                )
-            }
+            <p className="text-xs text-gray-600 mt-1 ml-1">Filter datasets by selecting {label.toLowerCase()}.</p>
+            {selectedItems.length > 0 && (
+                <p className="text-xs text-blue-500 mb-1 ml-1">
+                    <a href="#" onClick={handleClearAll}>Clear filters</a>
+                </p>
+            )}
 
-            {/* Display selected tags as badges with a maximum height and scrollable area */}
-            <ScrollArea className="max-h-30 overflow-y-auto"> {/* Set max height and enable vertical scrolling */}
+            {/* Display selected items as badges with a maximum height and scrollable area */}
+            <ScrollArea className="max-h-32 overflow-y-auto">
                 <div className="flex flex-wrap items-center gap-1 mb-2 mt-2">
-                    {state.tags.length > 0 && (
-                        state.tags.map((value: string) => {
-                            const option = options.tagOptions.find((option) => option.value === value);
+                    {selectedItems.length > 0 &&
+                        selectedItems.map((value: string) => {
+                            const option = items.find((option) => option.value === value);
                             return option ? (
                                 <Badge key={option.value} variant="secondary" className="flex items-center truncate">
                                     {option.label}
@@ -131,19 +105,18 @@ const TagMultiSelectCombobox: FC<ComboboxProps> = ({ state, dispatch }) => {
                                         className="ml-1 p-0"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleRemoveTag(option.value);
+                                            handleRemoveItem(option.value);
                                         }}
                                     >
                                         <Cross2Icon className="h-3 w-3" />
                                     </Button>
                                 </Badge>
                             ) : null;
-                        })
-                    )}
+                        })}
                 </div>
             </ScrollArea>
         </>
     );
 };
 
-export default TagMultiSelectCombobox;
+export default MultiSelectCombobox;
