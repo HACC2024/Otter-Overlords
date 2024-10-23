@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import Papa from 'papaparse';
 import { Scatter } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from 'chart.js';
 
@@ -11,34 +10,20 @@ interface Data {
   [key: string]: string | number;
 }
 
-export default function ScatterGraph() {
-  const [rows, setRows] = React.useState<Data[]>([]);
-  const [xLabel, setXLabel] = React.useState<string>('');
-  const [yLabel, setYLabel] = React.useState<string>('');
-  const [columns, setColumns] = React.useState<string[]>([]);
-  const [graphData, setGraphData] = React.useState<any>(null);
+interface ScatterGraphProps {
+  data: Data[]; // Parsed data
+  columns: string[]; // Column headers
+}
 
-  React.useEffect(() => {
-    // Load and parse the CSV
-    Papa.parse("test_databases/cai_list_202401.csv", {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const data = result.data as Data[];
-        setRows(data);
-
-        if (data.length > 0) {
-          const headers = Object.keys(data[0]);
-          setColumns(headers);
-        }
-      },
-    });
-  }, []);
+export default function ScatterGraph({ data, columns }: ScatterGraphProps) {
+  const [xLabel, setXLabel] = React.useState<string>(''); // X axis label
+  const [yLabel, setYLabel] = React.useState<string>(''); // Y axis label
+  const [graphData, setGraphData] = React.useState<any>(null); // Scatter graph data
 
   const handleGenerateGraph = () => {
     if (!xLabel || !yLabel) return;
 
-    const parsedData = rows.map((row) => ({
+    const parsedData = data.map((row) => ({
       x: parseFloat(row[xLabel] as string),
       y: parseFloat(row[yLabel] as string),
     }));

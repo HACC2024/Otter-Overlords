@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Papa from 'papaparse';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from 'chart.js';
 
@@ -10,28 +9,14 @@ interface Data {
   [key: string]: string | number;
 }
 
-export default function PieChart() {
-  const [rows, setRows] = React.useState<Data[]>([]);
-  const [columns, setColumns] = React.useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('');
-  const [chartData, setChartData] = React.useState<ChartData<'pie', number[], string> | null>(null);
+interface PieChartProps {
+  data: Data[]; // The parsed data
+  columns: string[]; // The columns from the parsed data
+}
 
-  React.useEffect(() => {
-    // Load and parse the CSV
-    Papa.parse("test_databases/cai_list_202401.csv", {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const data = result.data as Data[];
-        setRows(data);
-
-        if (data.length > 0) {
-          const headers = Object.keys(data[0]);
-          setColumns(headers);
-        }
-      },
-    });
-  }, []);
+export default function PieChart({ data, columns }: PieChartProps) {
+  const [selectedCategory, setSelectedCategory] = React.useState<string>(''); // State for selected category
+  const [chartData, setChartData] = React.useState<ChartData<'pie', number[], string> | null>(null); // State for chart data
 
   const handleGeneratePieChart = () => {
     if (!selectedCategory) return;
@@ -39,20 +24,20 @@ export default function PieChart() {
     const counts: { [key: string]: number } = {};
 
     // Count occurrences of each value in the selected category
-    rows.forEach((row) => {
+    data.forEach((row) => {
       const value = row[selectedCategory] as string;
       counts[value] = (counts[value] || 0) + 1;
     });
 
     // Generate labels and data for the pie chart
     const labels = Object.keys(counts);
-    const data = Object.values(counts);
+    const values = Object.values(counts);
 
     const pieData: ChartData<'pie', number[], string> = {
       labels: labels,
       datasets: [{
         label: `Pie chart of ${selectedCategory}`,
-        data: data,
+        data: values,
         backgroundColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`),
       }]
     };

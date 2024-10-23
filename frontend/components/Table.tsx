@@ -9,7 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Papa from 'papaparse';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import TableSortLabel from '@mui/material/TableSortLabel';
@@ -26,38 +25,19 @@ interface Data {
   [key: string]: string | number;
 }
 
-export default function StickyHeadTable() {
+interface StickyHeadTableProps {
+  data: Data[];  // Parsed data from parent
+  columns: Column[]; // Column headers from parent
+}
+
+export default function StickyHeadTable({ data, columns }: StickyHeadTableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [rows, setRows] = React.useState<Data[]>([]);
-  const [columns, setColumns] = React.useState<Column[]>([]);
-  const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(new Set());
+  const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(new Set(columns.map(col => col.id))); // Initialize visible columns from props
   const [showColumnToggles, setShowColumnToggles] = React.useState(false);
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<string | null>(null); // Track which column is sorted
-
-  React.useEffect(() => {
-    Papa.parse("test_databases/cai_list_202401.csv", {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const data = result.data as Data[];
-        setRows(data);
-
-        if (data.length > 0) {
-          const headers = Object.keys(data[0]);
-          const newColumns = headers.map((header) => ({
-            id: header,
-            label: header,
-            minWidth: 170,
-          }));
-          setColumns(newColumns);
-          setVisibleColumns(new Set(headers));
-        }
-      },
-    });
-  }, []);
 
   const handleRequestSort = (columnId: string) => {
     const isAsc = orderBy === columnId && order === 'asc';
@@ -136,7 +116,7 @@ export default function StickyHeadTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {handleSort(rows, comparator)
+            {handleSort(data, comparator)
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 return (
@@ -159,7 +139,7 @@ export default function StickyHeadTable() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
