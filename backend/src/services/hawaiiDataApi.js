@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getList } from '../utils/getList.js';
 import { error } from 'console';
+import { simplifyList } from '../utils/simplifyList.js';
 
 const API_URL = 'https://opendata.hawaii.gov';
 
@@ -42,9 +43,10 @@ export const getFilteredDataset = async (organization, groups, tags, formats, li
         const SUCCESS = FIRST_RESPONSE.data.success && SECOND_RESPONSE.data.success;
         
         if (SUCCESS) {
+            const simplifiedData = simplifyList(DATA); // Simplify the dataset
             return {
                 count: FIRST_RESPONSE.data.result.count,
-                results: DATA,
+                results: simplifiedData, // Return the simplified data
                 filters: getList(DATA, API_URL)
             };
         } else {
