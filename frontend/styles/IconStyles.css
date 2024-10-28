@@ -1,0 +1,13 @@
+.icon-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.icon {
+    transition: transform 0.2s;
+}
+
+.icon-container:hover .icon {
+    transform: scale(1.15);
+}

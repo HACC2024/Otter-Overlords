@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Resource, State, Tag } from "./App";
 import { Dispatch } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Masonry from 'react-masonry-css';
 import { Badge } from "./ui/badge";
 import { FORMATS, getFormatColor } from "@/utils/convert";
+import { BookmarkPlus, BookmarkCheck } from "lucide-react";
+import '../styles/iconStyles.css';
+
 
 interface DatasetsViewProps {
     state: State;
@@ -55,6 +59,12 @@ const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats }: {s
 };
 
 const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources }) => {
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    const handleBookmarkClick = () => {
+        setIsBookmarked(!isBookmarked);
+    };
+
     return (
         <Card className="w-full mb-4 shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:bg-gray-50">
             <CardHeader>
@@ -84,12 +94,18 @@ const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources }) => {
             }
             {
                 tags.length > 0 &&
-                    <CardFooter className="flex flex-wrap">
+                    <CardContent className="flex flex-wrap">
                         {tags.map((tag, index) => (
                             <Badge className="m-0.5" key={index}>{tag.display_name}</Badge>
                         ))}
-                    </CardFooter>
+                    </CardContent>
             }
+            <hr className="border-t border-gray-300 my-2" />
+            <CardFooter className="flex items-center justify-between">
+                <div className="flex items-center justify-between icon-container" onClick={handleBookmarkClick}>
+                    {isBookmarked ? <BookmarkCheck className="icon" /> : <BookmarkPlus className="icon" />}
+                </div>
+            </CardFooter>
         </Card>
     );
 };
