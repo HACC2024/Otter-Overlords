@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { State } from "./App";
+import Visualizer from './Visualizer';
 import TabSwitch from "./TabSwitch";
 import DatasetsView from "./DatasetsView";
 import DatasetsToolbar from "./DatasetsToolbar";
@@ -28,7 +29,7 @@ const Interface: React.FC<InterfaceProps> = ({ state, dispatch }) => {
             <ScrollArea className="w-full">
                 {
                     state.visualize ?
-                        <div>Visualization Here</div>
+                        <Visualizer />
                         :
                         <DatasetsView state={state} dispatch={dispatch} />
                 }

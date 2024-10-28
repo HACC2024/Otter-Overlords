@@ -1,0 +1,41 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.selectContainer {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-bottom: 20px;
+    width: 100%; /* Full width so it can be centered relative to the page */
+}
+
+.selectContainer label {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.selectContainer select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.visualizerContainer {
+    width: 100%;
+    max-width: 1200px; /* To limit the width of the visualizer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
