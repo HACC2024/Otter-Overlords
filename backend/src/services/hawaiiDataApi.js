@@ -2,6 +2,7 @@ import axios from 'axios';
 import csv from 'csv-parser';
 import { getList } from '../utils/getList.js';
 import { error } from 'console';
+import { simplifyList } from '../utils/simplifyList.js';
 
 const API_URL = 'https://opendata.hawaii.gov';
 
@@ -43,10 +44,11 @@ export const getFilteredDataset = async (organization, groups, tags, formats, li
         const SUCCESS = FIRST_RESPONSE.data.success && SECOND_RESPONSE.data.success;
         
         if (SUCCESS) {
+            const simplifiedData = simplifyList(DATA);
             return {
                 count: FIRST_RESPONSE.data.result.count,
-                results: DATA,
-                filters: getList(DATA, API_URL)
+                results: simplifiedData,
+                filters: getList(simplifiedData, API_URL)
             };
         } else {
             throw new Error('Failed to fetch filtered dataset from Hawaii Open Data');
