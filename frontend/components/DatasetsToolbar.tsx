@@ -72,6 +72,12 @@ const DatasetsToolbar: React.FC<DatasetsToolbarProps> = ({ state, dispatch }) =>
                     Show Formats
                 </label>
             </div>
+            <div className="flex items-center space-x-2">
+                <Checkbox id="terms" checked={state.showFavorites} onClick={() => handleShowBadge('showFavorites')} />
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Show Favorites
+                </label>
+            </div>
         </div>
     );
 };

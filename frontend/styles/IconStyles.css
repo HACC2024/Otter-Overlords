@@ -11,3 +11,7 @@
 .icon-container:hover .icon {
     transform: scale(1.15);
 }
+
+.checked-bookmark {
+    color: #4CAF50;
+}

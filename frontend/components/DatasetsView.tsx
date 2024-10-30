@@ -1,3 +1,6 @@
+'use client';
+
+import React, { useEffect } from 'react';
 import { useState } from "react";
 import { Resource, State, Tag } from "./App";
 import { Dispatch } from "react";
@@ -6,9 +9,7 @@ import Masonry from 'react-masonry-css';
 import { Badge } from "./ui/badge";
 import { FORMATS, getFormatColor } from "@/utils/convert";
 import { BookmarkPlus, BookmarkCheck } from "lucide-react";
-import ls from 'local-storage';
 import '../styles/iconStyles.css';
-
 
 interface DatasetsViewProps {
     state: State;
@@ -24,8 +25,14 @@ interface DatasetProps {
     isFavorite: boolean;
 }
 
-const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats }: {sortBy: string, datasets: DatasetProps[], searchQuery: string, showTags: boolean, showFormats: boolean}) => {
-    const bookmarks = localStorage.getItem('hod-bookmarks');
+interface DatasetArrProps {
+    sortBy: string, datasets: DatasetProps[], searchQuery: string, showTags: boolean, showFormats: boolean, showFavorites: boolean}
+
+const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats, showFavorites }: DatasetArrProps) => {
+    let bookmarks = null;
+    if (typeof window !== 'undefined') {
+        bookmarks = window.localStorage.getItem('hod-bookmarks');
+    }
     return datasets
         .filter(dataset => dataset.state === 'active')
         .filter(dataset => {
@@ -34,7 +41,13 @@ const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats }: {s
                 || dataset.title.toLowerCase().includes(searchQuery.toLowerCase())
                 || dataset.notes.toLowerCase().includes(searchQuery.toLowerCase())
             );
-        }) 
+        })
+        .filter(dataset => {
+            if (showFavorites) {
+                return bookmarks ? JSON.parse(bookmarks).includes(dataset.title) : false;
+            }
+            return true;
+        })
         .sort((a, b) => {
             switch (sortBy) {
                 case 'name-asc':
@@ -85,6 +98,10 @@ const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources, isFavo
         }
     };
 
+    useEffect(() => {
+        setIsBookmarked(isFavorite);
+    }, [isFavorite]);
+
     return (
         <Card className="w-full mb-4 shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:bg-gray-50">
             <CardHeader>
@@ -120,10 +137,10 @@ const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources, isFavo
                         ))}
                     </CardContent>
             }
-            <hr className="border-t border-gray-300 my-2" />
-            <CardFooter className="flex items-center justify-between">
-                <div className="flex items-center justify-between icon-container" onClick={handleBookmarkClick}>
-                    {isBookmarked ? <BookmarkCheck className="icon" /> : <BookmarkPlus className="icon" />}
+            <hr className="border-t border-gray-300" />
+            <CardFooter className="flex items-center justify-end py-2">
+                <div className="icon-container" onClick={handleBookmarkClick}>
+                    {isBookmarked ? <BookmarkCheck strokeWidth={2.35} className="icon checked-bookmark" /> : <BookmarkPlus className="icon" />}
                 </div>
             </CardFooter>
         </Card>

@@ -41,6 +41,7 @@ export interface State {
     searchQuery: string;
     showTags: boolean;
     showFormats: boolean;
+    showFavorites: boolean;
     visualize: boolean;
     isLoadingFilters: boolean;
 }
@@ -73,6 +74,7 @@ const App = () => {
         searchQuery: "",
         showTags: true,
         showFormats: true,
+        showFavorites: false,
         visualize: false,
         isLoadingFilters: false
     };
