@@ -6,6 +6,7 @@ import Masonry from 'react-masonry-css';
 import { Badge } from "./ui/badge";
 import { FORMATS, getFormatColor } from "@/utils/convert";
 import { BookmarkPlus, BookmarkCheck } from "lucide-react";
+import ls from 'local-storage';
 import '../styles/iconStyles.css';
 
 
@@ -20,9 +21,11 @@ interface DatasetProps {
     notes: string;
     resources: Resource[];
     tags: Tag[];
+    isFavorite: boolean;
 }
 
 const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats }: {sortBy: string, datasets: DatasetProps[], searchQuery: string, showTags: boolean, showFormats: boolean}) => {
+    const bookmarks = localStorage.getItem('hod-bookmarks');
     return datasets
         .filter(dataset => dataset.state === 'active')
         .filter(dataset => {
@@ -46,23 +49,40 @@ const datasetArr = ({ sortBy, datasets, searchQuery, showTags, showFormats }: {s
                     return 0;
             }
         })
-        .map((dataset, index) => (
-            <Dataset
+        .map((dataset, index) => {
+            const favoriteCheck = bookmarks ? JSON.parse(bookmarks).includes(dataset.title) : false;
+            return (
+                <Dataset
                 key={index}
                 title={dataset.title}
                 notes={dataset.notes}
                 tags={showTags ? dataset.tags : []}
                 state={dataset.state}
                 resources={showFormats ? dataset.resources : []}
-            />
-        ));
+                isFavorite={favoriteCheck}
+                />
+            );
+        });
 };
 
-const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources }) => {
-    const [isBookmarked, setIsBookmarked] = useState(false);
+const Dataset: React.FC<DatasetProps> = ({ title, notes, tags, resources, isFavorite }) => {
+
+    const [isBookmarked, setIsBookmarked] = useState(isFavorite);
 
     const handleBookmarkClick = () => {
         setIsBookmarked(!isBookmarked);
+        const bookmarks = window.localStorage.getItem('hod-bookmarks');
+        if (bookmarks) {
+            const bookmarksArray = JSON.parse(bookmarks);
+            if (isBookmarked) {
+                const newBookmarks = bookmarksArray.filter((bookmark: string) => bookmark !== title);
+                window.localStorage.setItem('hod-bookmarks', JSON.stringify(newBookmarks));
+            } else {
+                window.localStorage.setItem('hod-bookmarks', JSON.stringify([...bookmarksArray, title]));
+            }
+        } else {
+            window.localStorage.setItem('hod-bookmarks', JSON.stringify([title]));
+        }
     };
 
     return (

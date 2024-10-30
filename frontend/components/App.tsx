@@ -21,6 +21,7 @@ interface Datasets {
     notes: string;
     tags: Tag[];
     resources: Resource[];
+    isFavorite: boolean;
 }
 
 export interface State {
