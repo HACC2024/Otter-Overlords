@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { getFormatColor } from "@/utils/convert";
 import Masonry from '@mui/lab/Masonry';
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import DOMPurify from 'dompurify';
 
 interface InfoCardProps {
     dataset: Dataset;
@@ -40,6 +41,19 @@ const InfoCard: React.FC<InfoCardProps> = ({ dataset, showTags, showFormats, dis
         dispatch({ type: "selectedDataset", payload: dataset.name });
     };
 
+    const sanitizeAndFormatNotes = (notes: string) => {
+        const sanitizedNotes = DOMPurify.sanitize(notes, {
+            FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed', 'form'],
+            FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload', 'size', 'width', 'height', 'frameborder', 'allowfullscreen']
+        });
+        const formattedNotes = sanitizedNotes
+        .replace(/&nbsp;/g, '') // Replace non-breaking spaces with regular spaces
+        .replace(/\s*Description:\s*/, '<br><br>Description:<br>') // Format description
+        return formattedNotes;
+    }
+
+    const sanitizedFormattedNotes = sanitizeAndFormatNotes(dataset.notes);
+
     return (
         <Card className="mx-2 my-4 shadow-md transform transition-transform hover:scale-101 hover:-translate-y-1 hover:shadow-lg max-w-md relative">
             {/* Bookmark Icon */}
@@ -58,7 +72,7 @@ const InfoCard: React.FC<InfoCardProps> = ({ dataset, showTags, showFormats, dis
                 <CardTitle>{dataset.title}</CardTitle>
                 {dataset.notes.length > 0 && (
                     <CardDescription className="break-words whitespace-normal">
-                        <div dangerouslySetInnerHTML={{ __html: dataset.notes }} />
+                        <div dangerouslySetInnerHTML={{ __html: sanitizedFormattedNotes }} />
                     </CardDescription>
                 )}
             </CardHeader>
