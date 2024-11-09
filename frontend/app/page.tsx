@@ -24,6 +24,7 @@ export interface State {
     organization: string | null;
     groups: string[];
     tags: string[];
+    recentDatasets: Dataset[];
     isLoadingFilters: boolean;
     isLoadingDatasets: boolean;
     isLoadingCSV: boolean;
@@ -100,6 +101,7 @@ export default function Home() {
         organization: null,
         groups: [],
         tags: [],
+        recentDatasets: [],
         isLoadingFilters: true,
         isLoadingDatasets: true,
         isLoadingCSV: true,
