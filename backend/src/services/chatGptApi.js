@@ -17,7 +17,7 @@ export const getXYAxis = async (csv, info) => {
                     "content": [
                         {
                             "type": "text",
-                            "text": "Provided are dataset description and sample data, Ignore the values of the X and Y axis when writing the title and subtitle. X and Y axis should never have non-numeric character as value; with an exception to bar chart where only the X axis can have non-numeric character as value."
+                            "text": "Provided are dataset description and sample data, Ignore the values of the X and Y axis when writing the title and subtitle. X and Y axis should never have non-numeric character as value; with an exception to bar chart where only the X axis can have non-numeric character as value. X-axis for line graph can never be a datetime value like 01/01/2000 12:00:00 AM."
                         }
                     ]
                 },
@@ -26,7 +26,7 @@ export const getXYAxis = async (csv, info) => {
                     "content": [
                         {
                             "type": "text",
-                            "text": "DBEDT Hawaii Annual Electricity Cost And Consumption 2006-2010\nDBEDT Hawaii Annual Electricity Cost And Consumption 2006-2010\n[{\n \"X v_alues\": \"2006\",\n\"City &amp; County of Honolulu\": \"7700604915\",\n\"Maui County\": \"1266466780\",\n\"Hawaii country\": \"1148760827\",\n\"Kauai County\": \"452079711\",\n\"State Cost\": \"2190152387\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n},\n{\n\"X Values\": \"2007\",\n\"City &amp; County of Honolulu\": \"7675354990\",\n\"Maui County\": \"1280102549\",\n\"Hawaii County\": \"1162683764\",\n\"Kauai County\": \"466895789\",\n\"State Cost\": \"2253431463\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n},\n{\n\"X Values\": \"2008\",\n\"City &amp; County of Honolulu\": \"7555961805\",\n\"Maui County\": \"1239228345\",\n\"Hawaii County\": \"1141029607\",\n\"Kauai County\": \"453790517\",\n\"State Cost\": \"3033950142\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n}]"
+                            "text": "DBEDT Hawaii Annual Electricity Cost And Consumption 2006-2010\nDBEDT Hawaii Annual Electricity Cost And Consumption 2006-2010\n[{\n \"X v_alues\": \"2006\",\n\"City &amp; County of Honolulu\": \"7700604915\",\n\"Maui County\": \"1266466780\",\n\"Hawaii country\": \"1148760827\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n},\n{\n\"X v_alues\": \"2007\",\n\"City &amp; County of Honolulu\": \"7675354990\",\n\"Maui County\": \"1280102549\",\n\"Hawaii country\": \"1162683764\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n},\n{\n\"X v_alues\": \"2008\",\n\"City &amp; County of Honolulu\": \"7555961805\",\n\"Maui County\": \"1239228345\",\n\"Hawaii country\": \"1141029607\",\n\"Location 1 (address)\": \"\",\n\"Location 1 (city)\": \"\",\n\"Location 1 (state)\": \"\",\n\"Location 1 (zip)\": \"\"\n}]"
                         }
                     ]
                 },
@@ -35,7 +35,7 @@ export const getXYAxis = async (csv, info) => {
                     "content": [
                         {
                             "type": "text",
-                            "text": "{\n  \"title\": \"Annual Electricity Cost and Consumption in Hawaii\",\n  \"subtitle\": \"Trends in Electricity Expenses Across Different Counties (2006-2010)\",\n  \"x\": \"X v_alues\",\n  \"y\": [\n    \"City &amp; County of Honolulu\",\n    \"Maui County\",\n    \"Hawaii country\",\n    \"Kauai County\",\n    \"State Cost\"\n  ],\n  \"graphable\": true,\n  \"is_bar\": true,\n  \"barX\": \"X v_alues\",\n  \"barY\": [\"City &amp; County of Honolulu\", \"Maui County\", \"Hawaii country\", \"Kauai County\", \"State Cost\"]\n}"
+                            "text": "{\n  \"title\": \"Annual Electricity Cost and Consumption in Hawaii\",\n  \"subtitle\": \"Trends in Electricity Expenses Across Different Counties (2006-2010)\",\n  \"x\": \"X v_alues\",\n  \"y\": [\n    \"City &amp; County of Honolulu\",\n    \"Maui County\",\n    \"Hawaii country\"\n  ],\n  \"graphable\": true,\n  \"is_bar\": true,\n  \"barX\": \"X v_alues\",\n  \"barY\": [\"City &amp; County of Honolulu\", \"Maui County\", \"Hawaii country\"]\n}"
                         }
                     ]
                 },
@@ -108,6 +108,24 @@ export const getXYAxis = async (csv, info) => {
                         {
                             "type": "text",
                             "text": "{\"title\":\"Monthly Statistics of Births, Deaths, Marriages, and Civil Unions in Kauai County\",\"subtitle\":\"Data Overview for 2012\",\"x\":\"\",\"y\":[],\"graphable\":false,\"is_bar\":true,\"barX\":\"Month of Occurrence\",\"barY\":[\"Birth\",\"Deaths\",\"Marriages\",\"Civil Unions\"]}"
+                        }
+                    ]
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "HI KWh Utility Supply 2008 - 2012\nElectric utility production and electricity purchase\n[{\n\"Company\": \"KIUC\",\n\"Island\": \"Kauai\",\n\"RptMonth\": \"01/31/2008 12:00:00 AM\",\n\"RptSection\": \"Electricity Production\",\n\"Electricity Generation\": \"Electricity Generated by Main Power Plant\",\n\"Quantity\": \"37302686\",\n\"PhysicalUnit\": \"KWh\"\n},\n{\n\"Company\": \"KIUC\",\n\"Island\": \"Kauai\",\n\"RptMonth\": \"01/31/2008 12:00:00 AM\",\n\"RptSection\": \"Electricity Production\",\n\"Electricity Generation\": \"Electricity Purchased from Independent Power Plant\",\n\"Quantity\": \"2796008\",\n\"PhysicalUnit\": \"KWh\"\n},\n{\n\"Company\": \"KIUC\",\n\"Island\": \"Kauai\",\n\"RptMonth\": \"02/28/2008 12:00:00 AM\",\n\"RptSection\": \"Electricity Production\",\n\"Electricity Generation\": \"Electricity Generated by Main Power Plant\",\n\"Quantity\": \"35223889\",\n\"PhysicalUnit\": \"KWh\"\n}]"
+                        }
+                    ]
+                },
+                {
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "{\"title\":\"Electric Utility Supply in Hawaii (2008 - 2012)\",\"subtitle\":\"Production and Purchase of Electricity in Kauai\",\"x\":\"\",\"y\":[],\"graphable\":false,\"is_bar\":true,\"barX\":\"Electricity Generation\",\"barY\":[\"Quantity\"]}"
                         }
                     ]
                 },
